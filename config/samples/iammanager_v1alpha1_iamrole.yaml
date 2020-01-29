@@ -1,0 +1,28 @@
+apiVersion: iammanager.keikoproj.io/v1alpha1
+kind: Iamrole
+metadata: 
+  name: iamrole-sample-3
+  labels:
+    managedBy: iam-manager
+spec: 
+  PolicyDocument: 
+    Statement: 
+      - 
+        Action: 
+          - "sts:Describe"
+          - "kms:ListKeys"
+          - "kms:PutKeyPolicy"
+          - "kms:ListAliases"
+          - "kms:CreateAlias"
+          - "kms:CreateKey"
+          - "kms:DescribeKey"
+          - "kms:GetKeyPolicy"
+          - "iam:CreateRole"
+          - "iam:ListRoles"
+          - "iam:GetRolePolicy"
+          - "iam:PutRolePolicy"
+          - "iam:PassRole"
+        Effect: Allow
+        Resource: 
+          - "*"
+        Sid: CloudOperatorPolicy

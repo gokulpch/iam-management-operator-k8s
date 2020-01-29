@@ -1,0 +1,126 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: iamroles.iammanager.keikoproj.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.state
+    description: current state of the iam role
+    name: State
+    type: string
+  - JSONPath: .status.roleName
+    description: Name of the role
+    name: RoleName
+    type: string
+  - JSONPath: .status.retryCount
+    description: Retry count
+    name: RetryCount
+    type: integer
+  - JSONPath: .metadata.creationTimestamp
+    description: time passed since iamrole creation
+    name: Age
+    type: date
+  group: iammanager.keikoproj.io
+  names:
+    kind: Iamrole
+    listKind: IamroleList
+    plural: iamroles
+    shortNames:
+    - iam
+    singular: iamrole
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Iamrole is the Schema for the iamroles API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: IamroleSpec defines the desired state of Iamrole
+          properties:
+            PolicyDocument:
+              description: PolicyDocument type defines IAM policy struct
+              properties:
+                Statement:
+                  description: Statement allows list of statement object
+                  items:
+                    description: Statement type defines the AWS IAM policy statement
+                    properties:
+                      Action:
+                        description: Action allowed/denied on specific resources
+                        items:
+                          type: string
+                        type: array
+                      Effect:
+                        description: Effect on target resource
+                        enum:
+                        - Allow
+                        - Deny
+                        type: string
+                      Resource:
+                        description: Resources defines target resources which IAM
+                          policy will be applied
+                        items:
+                          type: string
+                        type: array
+                      Sid:
+                        description: Sid is an optional field which describes the
+                          specific statement action
+                        type: string
+                    required:
+                    - Action
+                    - Effect
+                    - Resource
+                    type: object
+                  type: array
+                Version:
+                  description: Version specifies IAM policy version By default, this
+                    value is "2012-10-17"
+                  type: string
+              required:
+              - Statement
+              type: object
+          required:
+          - PolicyDocument
+          type: object
+        status:
+          description: IamroleStatus defines the observed state of Iamrole
+          properties:
+            retryCount:
+              type: integer
+            roleName:
+              description: 'Important: Run "make" to regenerate code after modifying
+                this file'
+              type: string
+            state:
+              type: string
+          required:
+          - retryCount
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
